@@ -1,3 +1,6 @@
+Original repo https://github.com/timcraft/net-http-oauth was removed.
+Yanked from rubygems https://rubygems.org/gems/net-http-oauth/versions/1.0.0.
+
 net-http-oauth
 ==============
 
