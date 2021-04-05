@@ -8,7 +8,7 @@ module Net
       def self.sign!(http, request, options = {})
         consumer_secret = options.fetch(:consumer_secret)
 
-        signature_method = options.fetch(:signature_method) { 'HMAC-SHA1' }
+        signature_method = options.fetch(:signature_method) { 'HMAC-SHA256' }
 
         token_secret = options[:token_secret]
 
@@ -27,6 +27,8 @@ module Net
           plaintext_signature(consumer_secret, token_secret)
         when 'HMAC-SHA1'
           hmac_sha1_signature(signature_base_string(http, request, params), consumer_secret, token_secret)
+        when 'HMAC-SHA256'
+          hmac_sha256_signature(signature_base_string(http, request, params), consumer_secret, token_secret)
         when 'RSA-SHA1'
           rsa_sha1_signature(signature_base_string(http, request, params), consumer_secret)
         else
@@ -42,6 +44,10 @@ module Net
 
       def self.hmac_sha1_signature(base_string, consumer_secret, token_secret)
         Base64.strict_encode64(OpenSSL::HMAC.digest(OpenSSL::Digest::SHA1.new, encode(consumer_secret, token_secret), base_string))
+      end
+
+      def self.hmac_sha256_signature(base_string, consumer_secret, token_secret)
+        Base64.strict_encode64(OpenSSL::HMAC.digest(OpenSSL::Digest::SHA256.new, encode(consumer_secret, token_secret), base_string))
       end
 
       def self.rsa_sha1_signature(base_string, consumer_secret)
